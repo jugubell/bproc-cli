@@ -24,26 +24,26 @@ public class Compile {
         this.generateProgramMemory();
     }
 
-    public List<String> compileForLogisim() {
-
-        List<String> hexFile = new ArrayList<>();
-
-        int memoryIndex = 0;
-
-        // header
-        hexFile.add("v3.0 hex words addressed");
-        //program
-        if(this.programMetadata.getHasDataDeclaration()) {
-
-        }
-        for (int i = 0; i < 0xff0; i++) {
-
-            if(this.instr.contains(this.codeLineType.get(i))) {
-
-            }
-        }
-
-    }
+//    public List<String> compileForLogisim() {
+//
+//        List<String> hexFile = new ArrayList<>();
+//
+//        int memoryIndex = 0;
+//
+//        // header
+//        hexFile.add("v3.0 hex words addressed");
+//        //program
+//        if(this.programMetadata.getHasDataDeclaration()) {
+//
+//        }
+//        for (int i = 0; i < 0xff0; i++) {
+//
+//            if(this.instr.contains(this.codeLineType.get(i))) {
+//
+//            }
+//        }
+//
+//    }
 
     public void generateProgramMemory() {
 
