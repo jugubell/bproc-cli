@@ -23,7 +23,7 @@ public class Compile {
         this.programMetadata = programMetadata;
         this.generateProgramMemory();
     }
-
+// random change for BProC - Main repos sync test
 //    public List<String> compileForLogisim() {
 //
 //        List<String> hexFile = new ArrayList<>();
