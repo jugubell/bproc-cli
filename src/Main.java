@@ -2,7 +2,10 @@
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 
 public class Main {
@@ -29,10 +32,23 @@ public class Main {
 
         boolean fileStatus = asmFile.readFile();
         VerifySyntax verifySyntax = new VerifySyntax(asmFile.getTrimmedData());
-
+//        TreeMap<Integer, LineType> hexFileContent = new TreeMap<>();
         if(fileStatus) {
             Log.info("[INFO] File read.");
-            verifySyntax.isSyntaxCorrect();
+            if(verifySyntax.isSyntaxCorrect()) {
+                Compile compile = new Compile(verifySyntax.getCode(), verifySyntax.getCodeLineType(), verifySyntax.getProgramMetadata());
+                List<String> hexFileContent = new ArrayList<>();
+//                hexFileContent = compile.getLogisimHexFileContent();
+//
+//                for (int i = 0; i < hexFileContent.size(); i++) {
+//                    System.out.println(hexFileContent.get(i));
+//                }
+                hexFileContent = compile.getLogisimHexFileContent();
+
+                for (int i = 0; i < hexFileContent.size(); i++) {
+                    System.out.println(hexFileContent.get(i));
+                }
+            }
         } else {
             Log.error("[ERROR] File not read.");
         }

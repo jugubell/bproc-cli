@@ -13,6 +13,18 @@ public class VerifySyntax {
         this.code = code;
     }
 
+    public ProgramMetadata getProgramMetadata() {
+        return this.programMetadata;
+    }
+
+    public List<String> getCode() {
+        return this.code;
+    }
+
+    public TreeMap<Integer, LineType> getCodeLineType() {
+        return this.codeLineType;
+    }
+
     public boolean isSyntaxCorrect() {
         int startIndex = -1;
         int lastDataIndex = -1;
@@ -95,7 +107,7 @@ public class VerifySyntax {
         Log.info("[INFO] Data Memory Usage: " + dataMemoryUsage + " byte");
         Log.info("[INFO] Total used: " + totalUsed + "%");
         Log.info("[INFO] Syntax correct.");
-
+        this.setProgramMetadata();
         return true;
 
     }
@@ -197,9 +209,6 @@ public class VerifySyntax {
         }
     }
 
-    private boolean compileCode() {
-        return true;
-    }
 
     private boolean is16bitsHexData(String hex) {
         if(hex.startsWith("0X") ^ hex.endsWith("H")) {
@@ -313,7 +322,22 @@ public class VerifySyntax {
     }
 
     private void setProgramMetadata() {
-        this.programMetadata.setDataMemoryUsage(this.programMemoryUsage());
+
+        this.programMetadata.setDataMemoryUsage(this.dataMemoryUsage());
+        this.programMetadata.setProgramMemoryUsage(this.programMemoryUsage());
+        this.programMetadata.setFirstDataMemory(this.firstDataMemory()[0]);
+        this.programMetadata.setDataDataRange(new DataRange(this.firstDataMemory()[0], 4095));
+        this.programMetadata.setProgramDataRange(new DataRange(0, this.programMemoryUsage()));
+        this.programMetadata.setHasDataDeclaration(this.hasDataDeclaration());
+    }
+
+    private boolean hasDataDeclaration() {
+        for (int i = 0; i < this.codeLineType.size(); i++) {
+            if(this.codeLineType.get(i) == LineType.DATA) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

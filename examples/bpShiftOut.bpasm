@@ -1,0 +1,17 @@
+; Shift out program
+; This program alternate in an infinite loop GPIO_OUT
+; between 01010101 (055h) and 10101010 (0AAh)
+; ./examples/bpShiftOut.bpasm
+
+.data 010h 0055h
+
+start:
+LDA 010h ; load address 010h to AC
+OUT      ; put AC value in GPIO_OUT
+CIL      ; shift left AC value
+OUT      ; put AC value in GPIO_OUT
+CIR      ; shift right AC value
+BIN 001h ; set PC to 001h
+
+haltProc:
+HLT

@@ -2,7 +2,7 @@ public class DataRange {
     private int start;
     private int end;
 
-    private DataRange (int start, int end) {
+    DataRange (int start, int end) {
         this.start = start;
         this.end = end;
     }
