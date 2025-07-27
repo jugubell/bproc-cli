@@ -139,7 +139,7 @@ public class VerifySyntax {
 
     private LineType isData(String[] str) {
         if(str.length == 3) {
-            if(str[0].equals(".DATA") && is12bitsHexData(str[1]) && is16bitsHexData(str[2])) {
+            if(str[0].equals(".DATA") && Utils.is12bitsHexData(str[1]) && Utils.is16bitsHexData(str[2])) {
                 return LineType.DATA;
             } else {
                 return LineType.SYNTAX_ERROR;
@@ -166,14 +166,14 @@ public class VerifySyntax {
                     if (str.length == 2 && this.instSet.get(str[0]).getHasOperand()) {
                         if (str[1].startsWith("0x") ^ str[1].endsWith("H")) {
                             String hexCode = str[1].replace("0x", "").replace("H", "");
-                            if (this.isValidHexNumber(hexCode)) {
+                            if (Utils.isValidHexNumber(hexCode)) {
                                 return LineType.INSTR_nI;
                             } else {
                                 return LineType.SYNTAX_ERROR;
                             }
                         } else if((str[1].startsWith("[0x") && str[1].endsWith("]")) ^ (str[1].startsWith("[") && str[1].endsWith("H]"))) {
                             String hexCode = str[1].replace("0x", "").replace("H", "").replace("[", "").replace("]","");
-                            if (this.isValidHexNumber(hexCode)) {
+                            if (Utils.isValidHexNumber(hexCode)) {
                                 return LineType.INSTR_I;
                             } else {
                                 return LineType.SYNTAX_ERROR;
@@ -195,38 +195,7 @@ public class VerifySyntax {
         }
     }
 
-    public boolean isValidHexNumber(String str) {
-        return !str.isEmpty() && str.toUpperCase().matches("^[0-9A-F]*$");
-    }
 
-    public boolean isIndirect(String str) {
-        if (str.length() == 4) {
-            char leftDigit = str.charAt(0);
-            char msbBin = Integer.toBinaryString((int) leftDigit).charAt(0);
-            return msbBin == '1';
-        } else {
-            return false;
-        }
-    }
-
-
-    private boolean is16bitsHexData(String hex) {
-        if(hex.startsWith("0X") ^ hex.endsWith("H")) {
-            String hexPure = hex.replace("0X", "").replace("H", "");
-            return hexPure.length() == 4 && this.isValidHexNumber(hexPure);
-        } else {
-            return false;
-        }
-    }
-
-    private boolean is12bitsHexData(String hex) {
-        if(hex.startsWith("0X") ^ hex.endsWith("H")) {
-            String hexPure = hex.replace("0X", "").replace("H", "");
-            return hexPure.length() == 3 && this.isValidHexNumber(hexPure);
-        } else {
-            return false;
-        }
-    }
 
     private int searchDuplicates(LineType lineType) {
         int count = 0;
@@ -272,7 +241,7 @@ public class VerifySyntax {
         for (int i = 0; i < this.code.size(); i++) {
             if(this.codeLineType.get(i) == LineType.DATA) {
                 count++;
-                currentData = Integer.parseInt(this.getDataAddress(this.code.get(i)), 16);
+                currentData = Integer.parseInt(Utils.getDataAddress(this.code.get(i)), 16);
                 if(firstData == -1 || currentData < firstData) {
                     firstData = currentData;
                     lineNumber = i;
@@ -282,14 +251,6 @@ public class VerifySyntax {
 
 
         return new int[]{firstData, lineNumber + 1};
-    }
-
-    private String getDataAddress(String data) {
-        return this.trimAddress(data.split(" ")[1]);
-    }
-
-    private String trimAddress(String address) {
-        return address.trim().toUpperCase().replace("0X", " ").replace("H", "");
     }
 
     private int programMemoryUsage() {

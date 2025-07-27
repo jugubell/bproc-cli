@@ -1,11 +1,8 @@
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.TreeMap;
 
 
 public class Main {
@@ -23,12 +20,6 @@ public class Main {
         Log.info("[INFO] The assembly file path provided is: " + gbl.getAssemblyFilePath());
 //
         ReadAssemblerFile asmFile = new ReadAssemblerFile(gbl.getAssemblyFilePath());
-//        System.out.println(verifySyntax.isLabel(new String[] {"customlabel:", ""}));
-//        System.out.println(verifySyntax.isLabel(new String[] {"customlabel", ""}));
-//        System.out.println(verifySyntax.isValidHexNumber("ABCD"));
-//        System.out.println(verifySyntax.isValidHexNumber("1234"));
-//        System.out.println(verifySyntax.isValidHexNumber("aefe"));
-//        System.out.println(verifySyntax.isValidHexNumber("fg12"));
 
         boolean fileStatus = asmFile.readFile();
         VerifySyntax verifySyntax = new VerifySyntax(asmFile.getTrimmedData());
@@ -37,29 +28,26 @@ public class Main {
             Log.info("[INFO] File read.");
             if(verifySyntax.isSyntaxCorrect()) {
                 Compile compile = new Compile(verifySyntax.getCode(), verifySyntax.getCodeLineType(), verifySyntax.getProgramMetadata());
-                List<String> hexFileContent = new ArrayList<>();
-//                hexFileContent = compile.getLogisimHexFileContent();
-//
-//                for (int i = 0; i < hexFileContent.size(); i++) {
-//                    System.out.println(hexFileContent.get(i));
-//                }
-                hexFileContent = compile.getLogisimHexFileContent();
+                List<String> hexFileLogisim = new ArrayList<>();
+                List<String> vhdlFile = new ArrayList<>();
 
-                for (int i = 0; i < hexFileContent.size(); i++) {
-                    System.out.println(hexFileContent.get(i));
+                hexFileLogisim = compile.getHexFileLogisim();
+                vhdlFile = compile.getHexFileVhdl();
+
+                for (String s : hexFileLogisim) {
+                    System.out.println(s);
                 }
+                Log.info("[INFO] Done.");
+
+                Log.info("[INFO] Generating vhdl hex file ...");
+                for (String s : vhdlFile) {
+                    System.out.println(s);
+                }
+                Log.info("[INFO] Done.");
             }
         } else {
             Log.error("[ERROR] File not read.");
         }
-
-//        for(int i=0 ; i < asmFile.getTrimmedData().size() ; i++) {
-//            System.out.println("Line " + i + " : " + asmFile.getTrimmedData().get(i));
-//            System.out.println("Line " + i + " : " + verifySyntax.whatLine(asmFile.getTrimmedData().get(i).trim().split("\\s+")));
-//        }
-//        File file = new File(filePath);
-
-
 
     }
 }

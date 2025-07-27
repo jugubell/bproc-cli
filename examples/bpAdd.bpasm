@@ -6,8 +6,8 @@
 
 .data 010h 0099h
 .data 011h 0012h
-.data 0a1h 1111h
-.data 0a2h ffffh
+;.data 0a1h 1111h
+;.data 0a2h ffffh
 
 start:
 LDA 010h ; Load address 010h to AC

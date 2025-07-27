@@ -15,19 +15,28 @@ public class ReadAssemblerFile {
     }
 
     public boolean readFile() {
-
             try {
                 File asmFile = new File(this.getFilePath());
                 Scanner asmScanner = new Scanner(asmFile);
 
-                if(asmScanner.hasNextLine()) {
-                    while (asmScanner.hasNextLine()) {
-                        this.fileData.add(asmScanner.nextLine());
+                String fileName = asmFile.getName();
+                String fileExtension = fileName.substring(fileName.lastIndexOf(".")+1);
 
-//                        System.out.println(data);
+                if(fileExtension.equals("bpasm")) {
+                    if(asmScanner.hasNextLine()) {
+                        while (asmScanner.hasNextLine()) {
+                            this.fileData.add(asmScanner.nextLine());
+
+    //                        System.out.println(data);
+                        }
+                    } else {
+                        Log.warning("[WARNING] The file provided is empty.");
+                        asmScanner.close();
+                        return false;
                     }
                 } else {
-                    Log.warning("[WARNING] The file provided is empty.");
+                    Log.error("[ERROR] Your provided file extension is wrong. Please choose a .bpasm file.");
+                    return false;
                 }
 
                 asmScanner.close();
@@ -42,7 +51,6 @@ public class ReadAssemblerFile {
 
                 return false;
             }
-
         }
 
         public String getFilePath() {

@@ -6,7 +6,6 @@ public class Globals {
 
     private final TreeMap<String, Instruction> INSTSET = new TreeMap<>();
 
-
     public Globals() {
         this.INSTSET.put("AND", new Instruction("AND", true, 0x0000));
         this.INSTSET.put("ADD", new Instruction("ADD", true, 0x1000));

@@ -3,15 +3,33 @@
 ; between 01010101 (055h) and 10101010 (0AAh)
 ; ./examples/bpShiftOut.bpasm
 
-.data 010h 0055h
+.data 020h 0055h
+.data 021h AE9Eh  ; 500 ms
 
 start:
-LDA 010h ; load address 010h to AC
+LDA 020h ; load address 010h to AC
 OUT      ; put AC value in GPIO_OUT
+
+CLE
+LDA 021h
+
+delay1:
+INC
+SZA
+BIN 004h
+
+LDA 020h
 CIL      ; shift left AC value
 OUT      ; put AC value in GPIO_OUT
-CIR      ; shift right AC value
-BIN 001h ; set PC to 001h
+
+CLE
+LDA 021h
+
+delay2:
+INC
+SZA
+BIN 00ch
+BIN 000h
 
 haltProc:
 HLT

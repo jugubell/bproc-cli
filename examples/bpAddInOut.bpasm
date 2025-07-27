@@ -1,0 +1,21 @@
+; Basic processor
+; This program reads the value of input
+; GPIO_IN, adds 3 and output it to GPIO_OUT
+; The capture of input value is done every 500 ms
+; ./examples/bpAddInOut.bpasm
+
+.data 010h 0003h
+;.data 011h 5D3Ch ; 1000 ms
+.data 011h AE9Eh  ; 500 ms
+
+start:
+INP
+ADD 010h
+OUT
+LDA 011h
+
+delay:
+INC
+SZA
+BIN 004h
+BIN 000h

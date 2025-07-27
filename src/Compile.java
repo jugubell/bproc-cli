@@ -1,6 +1,3 @@
-import com.sun.source.tree.Tree;
-
-import javax.sound.sampled.Line;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +16,7 @@ public class Compile {
 
     private List<String> hexFileContent = new ArrayList<>();
     private List<String> hexFileLogisim = new ArrayList<>();
-//    private file hexFile = new ArrayList<>();
+    private List<String> hexFileVhdl = new ArrayList<>();
 
 
     public Compile(List<String> code, TreeMap<Integer, LineType> codeLineType, ProgramMetadata programMetadata) {
@@ -31,9 +28,14 @@ public class Compile {
         this.generateHexFileContent();
     }
 
-    public List<String> getLogisimHexFileContent() {
+    public List<String> getHexFileLogisim() {
         this.compileForLogisim();
         return this.hexFileLogisim;
+    }
+
+    public List<String> getHexFileVhdl() {
+        this.compileForVhdl();
+        return this.hexFileVhdl;
     }
 
     public TreeMap<Integer, LineType> getCodeLineType() {
@@ -90,10 +92,39 @@ public class Compile {
         this.hexFileLogisim = hexFile;
     }
 
+    private void compileForVhdl() {
+        List<String> hexFile = new ArrayList<>();
+        String hexCode = "";
+
+        hexFile.add("-- program RAM");
+        hexFile.add("signal RAM: RAM_ARRAY_16b (0 to 4095) := (");
+        for (int i = 0; i < this.hexFileContent.size(); i++) {
+            hexCode = this.hexFileContent.get(i);
+            if(!hexCode.equals("0000")) {
+                hexFile.add("    " + i + " => x\"" + hexCode.toUpperCase() + "\",");
+            }
+        }
+
+        hexFile.add("    others => x\"0000\"");
+        hexFile.add(");");
+
+        this.hexFileVhdl.clear();
+        this.hexFileVhdl = hexFile;
+    }
+
     private void generateProgramMemory() {
         for (int i = 0; i < this.code.size(); i++) {
             if(this.instr.contains(this.codeLineType.get(i))) {
-                this.program.add(Integer.toHexString(this.instSet.get(this.getInstruction(this.code.get(i))).getOpCode()));
+                String line = this.code.get(i);
+                Integer opCode = this.instSet.get(this.getInstruction(line)).getOpCode();
+                boolean hasOperand = this.instSet.get(this.getInstruction(line)).getHasOperand();
+                if(this.codeLineType.get(i) == LineType.INSTR_I) {
+                    opCode = opCode + 0x8000;
+                }
+                if(hasOperand) {
+                    opCode = opCode + Utils.getDataAddressInt(line);
+                }
+                this.program.add(Integer.toHexString(opCode));
             }
         }
     }
@@ -101,25 +132,9 @@ public class Compile {
     private void generateDataMemory() {
         for (int i = 0; i < this.code.size(); i++) {
             if(this.codeLineType.get(i) == LineType.DATA) {
-                this.data.put(this.getDataAddressInt(this.code.get(i)), this.getDataData(this.code.get(i)));
+                this.data.put(Utils.getDataAddressInt(this.code.get(i)), Utils.getDataData(this.code.get(i)));
             }
         }
-    }
-
-    private String getDataAddress(String data) {
-        return this.trimAddress(data.split(" ")[1]);
-    }
-
-    private int getDataAddressInt(String data) {
-        return Integer.decode("0x" + this.trimAddress(data.split(" ")[1]));
-    }
-
-    private String getDataData(String data) {
-        return this.trimAddress(data.split(" ")[2]);
-    }
-
-    private String trimAddress(String address) {
-        return address.trim().toUpperCase().replace("0X", " ").replace("H", "");
     }
 
     private String getInstruction(String line) {
