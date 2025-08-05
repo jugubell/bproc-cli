@@ -46,4 +46,12 @@ public class Utils {
         return trimAddress(data.split(" ")[2]);
     }
 
+    public static String cleanLabel(String str) {
+        return str.trim().replace(":", "");
+    }
+
+    public static String getLabelFromJmp(String str) {
+        return str.trim().split(" ")[1].toUpperCase();
+    }
+
 }

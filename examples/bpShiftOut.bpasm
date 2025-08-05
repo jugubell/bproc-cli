@@ -1,10 +1,18 @@
+; Basic processor compiler - BProC
 ; Shift out program
 ; This program alternate in an infinite loop GPIO_OUT
 ; between 01010101 (055h) and 10101010 (0AAh)
-; ./examples/bpShiftOut.bpasm
+; input (BPASM): ./examples/bpShiftOut.bpasm
 
 .data 020h 0055h
-.data 021h AE9Eh  ; 500 ms
+
+.data 021h
+
+;.data 021h D74Fh  ; delay: 250 ms
+;.data 021h AE9Eh   ; delay: 500 ms
+;.data 021h 5D3Ch  ; delay: 1000 ms
+;.data
+
 
 start:
 LDA 020h ; load address 010h to AC
@@ -16,7 +24,7 @@ LDA 021h
 delay1:
 INC
 SZA
-BIN 004h
+JMP delay1
 
 LDA 020h
 CIL      ; shift left AC value
@@ -28,8 +36,8 @@ LDA 021h
 delay2:
 INC
 SZA
-BIN 00ch
-BIN 000h
+JMP delay2
+JMP start
 
 haltProc:
 HLT

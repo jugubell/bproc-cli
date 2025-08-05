@@ -9,15 +9,16 @@ public class Compile {
     private TreeMap<Integer, LineType> codeLineType;
     private ProgramMetadata programMetadata;
 
-    private final List<LineType> instr = Arrays.asList(LineType.INSTR, LineType.INSTR_I, LineType.INSTR_nI);
+    private final List<LineType> instr = Arrays.asList(LineType.INSTR, LineType.INSTR_I, LineType.INSTR_nI, LineType.JUMP);
     private TreeMap<String, Instruction> instSet = new Globals().getInstset();
     private List<String> program = new ArrayList<>();
     private TreeMap<Integer, String> data = new TreeMap<>();
+    private TreeMap<String, Integer> labeIndex = new TreeMap<>();
 
     private List<String> hexFileContent = new ArrayList<>();
     private List<String> hexFileLogisim = new ArrayList<>();
     private List<String> hexFileVhdl = new ArrayList<>();
-
+    private List<String> memFile = new ArrayList<>();
 
     public Compile(List<String> code, TreeMap<Integer, LineType> codeLineType, ProgramMetadata programMetadata) {
         this.programMetadata = programMetadata;
@@ -36,6 +37,11 @@ public class Compile {
     public List<String> getHexFileVhdl() {
         this.compileForVhdl();
         return this.hexFileVhdl;
+    }
+
+    public List<String> getMemFile() {
+        this.compileForMemFile();
+        return this.memFile;
     }
 
     public TreeMap<Integer, LineType> getCodeLineType() {
@@ -112,7 +118,30 @@ public class Compile {
         this.hexFileVhdl = hexFile;
     }
 
+    private void compileForMemFile() {
+        this.memFile.clear();
+        this.memFile.addAll(this.hexFileContent);
+    }
+
+    private void generateLabelIndex() {
+        int programIndex = 0;
+        TreeMap<String, Integer> labelIndex = new TreeMap<>();
+        for (int i = 0; i < this.code.size(); i++) {
+            if(this.codeLineType.get(i) == LineType.LABEL || this.codeLineType.get(i) == LineType.START) {
+                labelIndex.put(Utils.cleanLabel(this.code.get(i)), programIndex);
+            }
+
+            if(this.instr.contains(this.codeLineType.get(i))) {
+                programIndex++;
+            }
+
+        }
+        this.labeIndex.clear();
+        this.labeIndex = labelIndex;
+    }
+
     private void generateProgramMemory() {
+        this.generateLabelIndex();
         for (int i = 0; i < this.code.size(); i++) {
             if(this.instr.contains(this.codeLineType.get(i))) {
                 String line = this.code.get(i);
@@ -123,6 +152,9 @@ public class Compile {
                 }
                 if(hasOperand) {
                     opCode = opCode + Utils.getDataAddressInt(line);
+                }
+                if(this.codeLineType.get(i) == LineType.JUMP) {
+                    opCode = this.instSet.get("BIN").getOpCode() + this.labeIndex.get(Utils.getLabelFromJmp(this.code.get(i)));
                 }
                 this.program.add(Integer.toHexString(opCode));
             }

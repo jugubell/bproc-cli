@@ -1,21 +1,29 @@
-; Basic processor
+; Basic processor compiler - BProC
+; This program tests the good function of read/write on RAM
+; and the Input port read and Output port write.
 ; This program reads the value of input
 ; GPIO_IN, adds 3 and output it to GPIO_OUT
 ; The capture of input value is done every 500 ms
 ; ./examples/bpAddInOut.bpasm
 
 .data 010h 0003h
-;.data 011h 5D3Ch ; 1000 ms
-.data 011h AE9Eh  ; 500 ms
+.data 011h D74Fh   ; delay: 250 ms
+;.data 011h AE9Eh  ; delay: 500 ms
+;.data 011h 5D3Ch  ; delay: 1000 ms
 
 start:
 INP
-ADD 010h
+STA 012h
+CLA
+CLE
+LDA 010h
+ADD 012h
 OUT
+CLE
 LDA 011h
 
 delay:
 INC
 SZA
-BIN 004h
+BIN 009h
 BIN 000h

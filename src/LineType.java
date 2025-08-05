@@ -6,5 +6,6 @@ public enum LineType {
     LABEL,
     DATA,
     START,
+    JUMP,
     SYNTAX_ERROR
 }

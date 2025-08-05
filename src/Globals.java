@@ -3,7 +3,8 @@ import java.util.TreeMap;
 
 public class Globals {
     private String assemblyFilePath = "";
-
+    private String logisimHexFilePath = "";
+    private String memFilePath = "";
     private final TreeMap<String, Instruction> INSTSET = new TreeMap<>();
 
     public Globals() {
@@ -31,14 +32,25 @@ public class Globals {
         this.INSTSET.put("SFI", new Instruction("SFI", false, 0xF200));
         this.INSTSET.put("SFO", new Instruction("SFO", false, 0xF100));
         this.INSTSET.put("LDI", new Instruction("LDI", false, 0xF080));
+        this.INSTSET.put("JMP", new Instruction("LDI", false, 0x0000, false));
     }
 
     public void setAssemblyFilePath(String filePath) {
         this.assemblyFilePath = filePath;
     }
+    public void setLogisimHexFilePath(String filePath) { this.logisimHexFilePath = filePath; }
+    public void setMemFilePath(String filePath) { this.memFilePath = filePath; }
 
     public String getAssemblyFilePath() {
         return this.assemblyFilePath;
+    }
+
+    public String getLogisimHexFilePath() {
+        return this.logisimHexFilePath;
+    }
+
+    public String getMemFilePath() {
+        return this.memFilePath;
     }
 
     public TreeMap<String, Instruction> getInstset() {

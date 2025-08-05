@@ -16,6 +16,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the file path: ");
         gbl.setAssemblyFilePath(scanner.nextLine());
+
 //
         Log.info("[INFO] The assembly file path provided is: " + gbl.getAssemblyFilePath());
 //
@@ -26,24 +27,30 @@ public class Main {
 //        TreeMap<Integer, LineType> hexFileContent = new TreeMap<>();
         if(fileStatus) {
             Log.info("[INFO] File read.");
+//            verifySyntax.isSyntaxCorrect();
             if(verifySyntax.isSyntaxCorrect()) {
                 Compile compile = new Compile(verifySyntax.getCode(), verifySyntax.getCodeLineType(), verifySyntax.getProgramMetadata());
                 List<String> hexFileLogisim = new ArrayList<>();
-                List<String> vhdlFile = new ArrayList<>();
+                List<String> memFile = new ArrayList<>();
 
                 hexFileLogisim = compile.getHexFileLogisim();
-                vhdlFile = compile.getHexFileVhdl();
+                memFile = compile.getMemFile();
 
+                Log.info("[INFO] Generating Logisim hex file ...");
                 for (String s : hexFileLogisim) {
                     System.out.println(s);
                 }
                 Log.info("[INFO] Done.");
 
-                Log.info("[INFO] Generating vhdl hex file ...");
-                for (String s : vhdlFile) {
+                Log.info("[INFO] Generating mem file ...");
+                for (String s : memFile) {
                     System.out.println(s);
                 }
                 Log.info("[INFO] Done.");
+
+//                Log.info("[INFO] Please provide path to mem output file: ");
+//                WriteHexFile writeHexFile = new WriteHexFile(scanner.nextLine(), memFile);
+//                writeHexFile.writeMemFile(true);
             }
         } else {
             Log.error("[ERROR] File not read.");

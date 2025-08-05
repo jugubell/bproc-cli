@@ -7,6 +7,7 @@ public class VerifySyntax {
     private TreeMap<Integer, LineType> codeLineType = new TreeMap<>();
     private ProgramMetadata programMetadata = new ProgramMetadata();
     private List<String> code;
+    private List<String> labels = new ArrayList<>();
 
     //constructor
     public VerifySyntax(List<String> code) {
@@ -46,6 +47,20 @@ public class VerifySyntax {
             }
 
             this.codeLineType.put(i, lineType);
+        }
+
+        this.fillLabelsList();
+
+        if(!this.labels.isEmpty()) {
+            for (int i = 0; i < this.codeLineType.size(); i++) {
+                if(this.codeLineType.get(i) == LineType.JUMP) {
+                    if(!this.labels.contains(Utils.getLabelFromJmp(this.code.get(i)))) {
+                        this.codeLineType.clear();
+                        Log.error("[ERROR] Syntax error at line " + (i + 1) + ". The label doesn't exist.");
+                        return false;
+                    }
+                }
+            }
         }
 
 
@@ -165,14 +180,16 @@ public class VerifySyntax {
                 if (this.instSet.containsKey(str[0])) {
                     if (str.length == 2 && this.instSet.get(str[0]).getHasOperand()) {
                         if (str[1].startsWith("0x") ^ str[1].endsWith("H")) {
+                            // Direct Instruction
                             String hexCode = str[1].replace("0x", "").replace("H", "");
                             if (Utils.isValidHexNumber(hexCode)) {
                                 return LineType.INSTR_nI;
                             } else {
                                 return LineType.SYNTAX_ERROR;
                             }
-                        } else if((str[1].startsWith("[0x") && str[1].endsWith("]")) ^ (str[1].startsWith("[") && str[1].endsWith("H]"))) {
-                            String hexCode = str[1].replace("0x", "").replace("H", "").replace("[", "").replace("]","");
+                        } else if ((str[1].startsWith("[0x") && str[1].endsWith("]")) ^ (str[1].startsWith("[") && str[1].endsWith("H]"))) {
+                            // Indirect Instruction
+                            String hexCode = str[1].replace("0x", "").replace("H", "").replace("[", "").replace("]", "");
                             if (Utils.isValidHexNumber(hexCode)) {
                                 return LineType.INSTR_I;
                             } else {
@@ -181,7 +198,11 @@ public class VerifySyntax {
                         } else {
                             return LineType.SYNTAX_ERROR;
                         }
+                    } else if(this.isJump(str)) {
+                        // JUMP instruction
+                        return LineType.JUMP;
                     } else if (str.length == 1 && !this.instSet.get(str[0]).getHasOperand()) {
+                        // Other instructions (no operand)
                         return LineType.INSTR;
                     } else {
                         return LineType.SYNTAX_ERROR;
@@ -258,7 +279,7 @@ public class VerifySyntax {
 
         for (int i = 0; i < this.code.size(); i++) {
             LineType currentLineType = this.codeLineType.get(i);
-            List<LineType> memoryInstructions = Arrays.asList(LineType.INSTR, LineType.INSTR_I, LineType.INSTR_nI);
+            List<LineType> memoryInstructions = Arrays.asList(LineType.INSTR, LineType.INSTR_I, LineType.INSTR_nI, LineType.JUMP);
 
             if(memoryInstructions.contains(currentLineType)) {
                 memoryCount++;
@@ -300,5 +321,25 @@ public class VerifySyntax {
         }
         return false;
     }
+
+    private void fillLabelsList() {
+        if(!this.codeLineType.isEmpty()) {
+            for (int i = 0; i < this.codeLineType.size(); i++) {
+                if(this.codeLineType.get(i) == LineType.LABEL || this.codeLineType.get(i) == LineType.START) {
+                    this.labels.add(Utils.cleanLabel(this.code.get(i)));
+                }
+            }
+        }
+    }
+
+    private boolean isJump(String[] str) {
+        if(str.length == 2) {
+            return str[0].equals("JMP");
+        } else {
+            return false;
+        }
+    }
+
+
 
 }
