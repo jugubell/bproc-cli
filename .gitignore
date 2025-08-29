@@ -25,5 +25,8 @@ bin/
 ### VS Code ###
 .vscode/
 
+### IDEA ###
+.idea/
+src/META-INF/
 ### Mac OS ###
 .DS_Store

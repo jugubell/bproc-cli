@@ -14,23 +14,34 @@ import java.util.Scanner;
 public class WriteHexFile {
 
     private List<String> hexFile;
-    private List<String> binFile = new ArrayList<>();
-    private List<String> outFile = new ArrayList<>();
     private String filePath;
+    private CommandLineOption option = CommandLineOption.BIN;
 
-    public WriteHexFile(String filePath, List<String> hexFile) {
+    public WriteHexFile(String filePath, List<String> hexFile, CommandLineOption option) {
         this.hexFile = hexFile;
         this.filePath = filePath;
+        this.option = option;
     }
 
-    public void writeMemFile(boolean isBinary) {
+    public void writeMemFile() {
 
 
         Path path = Paths.get(this.filePath);
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace("-", "_").replace(":", "_");
 
         if(Files.exists(path) && Files.isDirectory(path)) {
-            path = path.resolve("program" + timestamp + ".data");
+            switch (option) {
+                case BIN:
+                case HEX:
+                    path = path.resolve("program" + timestamp + ".data");
+                    break;
+                case HEXV3:
+                    path = path.resolve("program" + timestamp);
+                    break;
+                case VHDL:
+                    path = path.resolve("program" + timestamp + ".vhd");
+                    break;
+            }
         }
 
         if(Files.exists(path)) {
@@ -43,49 +54,23 @@ public class WriteHexFile {
                 Log.warning("[WARNING] Operation aborted by user.");
                 return;
             }
-
         }
 
         try {
             Log.info("[INFO] Writing file content ...");
-            this.outFile.clear();
-
-            if(isBinary) {
-                this.hexFile2binFile();
-                this.outFile = this.binFile;
-//                Files.write(path, this.binFile, StandardCharsets.US_ASCII);
-            } else {
-                this.outFile = this.hexFile;
-//                Files.write(path, this.hexFile, StandardCharsets.US_ASCII);
-            }
 
             try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.US_ASCII)) {
 
-                for (int i = 0; i < this.outFile.size(); i++) {
-                    writer.write(this.outFile.get(i));
-                    if (i < this.outFile.size() - 1)
+                for (int i = 0; i < this.hexFile.size(); i++) {
+                    writer.write(this.hexFile.get(i));
+                    if (i < this.hexFile.size() - 1)
                         writer.newLine();
                 }
             }
-
 
         } catch (IOException e) {
             Log.error("[ERROR] An error was occurred.");
             e.printStackTrace();
         }
     }
-
-
-
-    private void hexFile2binFile() {
-        for (String s : this.hexFile) {
-            int binary_int = Integer.parseInt(s, 16);
-            String binary = String.format("%16s", Integer.toBinaryString(binary_int)).replace(' ', '0');
-            this.binFile.add(binary);
-        }
-    }
-
-
-
-
 }

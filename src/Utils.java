@@ -1,3 +1,10 @@
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Utils {
     public static boolean isValidHexNumber(String str) {
         return !str.isEmpty() && str.toUpperCase().matches("^[0-9A-F]*$");
@@ -52,6 +59,37 @@ public class Utils {
 
     public static String getLabelFromJmp(String str) {
         return str.trim().split(" ")[1].toUpperCase();
+    }
+
+    public static PathType checkPath(String pth) {
+        try {
+            Path path = Paths.get(pth);
+
+            if(Files.isRegularFile(path)) {
+                return PathType.FILE;
+            }
+            if(Files.isDirectory(path)) {
+                return PathType.DIRECTORY;
+            }
+            return PathType.INVALID;
+
+        } catch (InvalidPathException e) {
+            return PathType.INVALID;
+        }
+    }
+
+    public static List<String> hexFile2binFile(List<String> file) {
+        List<String> binFile = new ArrayList<>();
+        for (String l: file) {
+            int binary_int = Integer.parseInt(l, 16);
+            String binary = String.format("%16s", Integer.toBinaryString(binary_int)).replace(' ', '0');
+            binFile.add(binary);
+        }
+        return binFile;
+    }
+
+    public static boolean supportsColor() {
+        return !System.getProperty("os.name").toLowerCase().contains("win");
     }
 
 }

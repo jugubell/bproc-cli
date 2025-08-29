@@ -1,0 +1,63 @@
+; Basic processor compiler - BProC
+; Shift out program
+; This program alternate in an infinite loop GPIO_OUT
+; between 01010101 (055h) and 10101010 (0AAh)
+; CPU clock: 125MHz
+; input (BPASM): ./examples/bpShiftOut500ms.bpasm
+
+
+; CLOCK: 125MHz
+; 20 ms
+;.data 030h 6917h ; fist mem case
+;.data 031h FFFEh ; counter init
+; 500 ms
+.data 030h 4351h ; fist mem case
+.data 031h FFD8h ; counter init
+
+.data 032h 0000h ; counter
+.data 033h FFFEh ; toggle state init
+.data 034h 0000h ; current state
+.data 035h 0055h ; OUT ref
+
+start:
+LDA 033h ; init toggle state
+STA 034h
+
+LDA 035h ; load OUT ref
+OUT
+JMP delay
+
+toggle:
+LDA 035h ; load OUT ref
+CIL
+OUT
+
+delay:
+LDA 031h ; init counter
+STA 032h
+LDA 030h ; load first mem
+
+repeat:  ; inc mem
+INC
+SZA
+JMP repeat
+
+incCounter:
+LDA 032h
+INC
+SZA
+JMP storeCounter
+JMP checkToggle
+
+storeCounter:
+STA 032h
+CLA
+JMP repeat
+
+checkToggle:
+LDA 034h
+INC
+STA 034h
+SZA
+JMP toggle
+JMP start

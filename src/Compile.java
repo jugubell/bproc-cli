@@ -3,6 +3,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TreeMap;
 
+/**
+ * Compile utility
+ * <p>It compiles the assembler code into binary/hexadecimal</p>
+ */
 public class Compile {
 
     private List<String> code;
@@ -29,6 +33,7 @@ public class Compile {
         this.generateHexFileContent();
     }
 
+    // Getters
     public List<String> getHexFileLogisim() {
         this.compileForLogisim();
         return this.hexFileLogisim;
@@ -39,8 +44,14 @@ public class Compile {
         return this.hexFileVhdl;
     }
 
-    public List<String> getMemFile() {
-        this.compileForMemFile();
+    /**
+     * Compiles into hexadecimal or binary according to isHex
+     * then return the file
+     * @param isHex
+     * @return the bin or hex file as <code>List</code>
+     */
+    public List<String> getMemFile(boolean isHex) {
+        this.compileForMemFile(isHex);
         return this.memFile;
     }
 
@@ -118,9 +129,13 @@ public class Compile {
         this.hexFileVhdl = hexFile;
     }
 
-    private void compileForMemFile() {
+    private void compileForMemFile(boolean isHex) {
         this.memFile.clear();
-        this.memFile.addAll(this.hexFileContent);
+        if(isHex) {
+            this.memFile.addAll(this.hexFileContent);
+        } else {
+            this.memFile.addAll(Utils.hexFile2binFile(this.hexFileContent));
+        }
     }
 
     private void generateLabelIndex() {

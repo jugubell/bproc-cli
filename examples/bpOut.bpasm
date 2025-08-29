@@ -1,0 +1,15 @@
+; Basic processor compiler - BProC
+; This program tests the good function of read/write on RAM
+; and the Input port read and Output port write.
+; This program reads the value of input
+; GPIO_IN, adds 3 and output it to GPIO_OUT
+; The capture of input value is done every 500 ms
+; ./examples/bpOut.bpasm
+;
+
+.data 020h 0AE5h
+
+start:
+LDA 020h
+OUT
+HLT
