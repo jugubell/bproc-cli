@@ -13,5 +13,6 @@ public enum CommandLineAction {
     VERIFY_SYNTAX,
     GENERATE_CODE,
     WRITE_CODE,
-    NOTHING
+    NOTHING,
+    ABORT
 }

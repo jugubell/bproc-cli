@@ -1,66 +1,98 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-
+/**
+ * Class for the assembler file reading.
+ */
 public class ReadAssemblerFile {
     private String filePath = "";
     private List<String> trimmedData = new ArrayList<>();
     private List<String> fileData = new ArrayList<>();
 
+    /**
+     * Constructor for the {@link ReadAssemblerFile} class.
+     * @param filePath
+     */
     public ReadAssemblerFile(String filePath) {
         this.filePath = filePath;
     }
 
+    /**
+     * Method for reading the file, the extension should be '.bpasm'
+     * Writes the file content into {@link #fileData}
+     * Uses {@link #trimFile()} to trim the file content.
+     * @return boolean true if read success
+     * @throws FileNotFoundException
+     */
     public boolean readFile() {
-            try {
-                File asmFile = new File(this.getFilePath());
-                Scanner asmScanner = new Scanner(asmFile);
+        try {
+            File asmFile = new File(this.getFilePath());
+            Scanner asmScanner = new Scanner(asmFile);
 
-                String fileName = asmFile.getName();
-                String fileExtension = fileName.substring(fileName.lastIndexOf(".")+1);
+            // getting the file name and file extension
+            String fileName = asmFile.getName();
+            String fileExtension = fileName.substring(fileName.lastIndexOf(".")+1);
 
-                if(fileExtension.equals("bpasm")) {
-                    if(asmScanner.hasNextLine()) {
-                        while (asmScanner.hasNextLine()) {
-                            this.fileData.add(asmScanner.nextLine());
-
-    //                        System.out.println(data);
-                        }
-                    } else {
-                        Log.warning("[WARNING] The file provided is empty.");
-                        asmScanner.close();
-                        return false;
+            // checks the extension
+            if(Utils.checkPath(this.getFilePath()) == PathType.FILE_EXISTS) {
+                // checks if the file has content
+                if(asmScanner.hasNextLine()) {
+                    // writing the file content into fileData field
+                    while (asmScanner.hasNextLine()) {
+                        this.fileData.add(asmScanner.nextLine());
                     }
+
+                // aborting if file empty
                 } else {
-                    Log.error("[ERROR] Your provided file extension is wrong. Please choose a .bpasm file.");
+                    Log.warning("[WARNING] The file provided is empty.");
+                    asmScanner.close();
                     return false;
                 }
 
-                asmScanner.close();
-
-                this.trimFile();
-
-                return true;
-
-            } catch (FileNotFoundException e) {
-                Log.error("[ERROR] An error was occurred!");
-                e.printStackTrace();
-
+            // aborting if file extension is not correct
+            } else {
+                Log.error("[ERROR] Your provided file doesn't exist or the extension is wrong. Please choose a .bpasm file.");
                 return false;
             }
-        }
 
-        public String getFilePath() {
+            // closing the opened file and trimming the content into trimmedData by trimFile();
+            asmScanner.close();
+            this.trimFile();
+            return true;
+
+        // throws exception if file not opened
+        } catch (FileNotFoundException e) {
+            Log.error("[ERROR] An error was occurred: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Getters
+    public String getFilePath() {
         return this.filePath;
     }
 
+    public List<String> getTrimmedData() {
+        return this.trimmedData;
+    }
+
+    // Setters
     public void setFilePath(String filePath) {
         this.filePath = filePath;
     }
 
+
+    /**
+     * Trims the file content and store the trimmed content
+     * and stores the trimmed data in {@link #trimmedData}.
+     * It removes comments (starting with ;)
+     * It removes extra spaces.
+     * Uppercases everything.
+     */
     public void trimFile() {
         for(String fileDatum: this.fileData) {
             String trimmedLine;
@@ -74,12 +106,6 @@ public class ReadAssemblerFile {
             }
 
             this.trimmedData.add(trimmedLine.trim().toUpperCase());
-
         }
-
-    }
-
-    public List<String> getTrimmedData() {
-        return this.trimmedData;
     }
 }

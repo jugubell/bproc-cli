@@ -5,5 +5,6 @@ public enum CommandLineOption {
     BIN,
     HEX,
     HEXV3,
-    VHDL
+    VHDL,
+    VERILOG
 }

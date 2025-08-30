@@ -1,3 +1,6 @@
+/**
+ * Enumeration of line types of code
+ */
 public enum LineType {
     EL,
     INSTR_nI,

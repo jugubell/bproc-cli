@@ -1,3 +1,6 @@
+/**
+ * Static class for console color.
+ */
 public final class ConsoleColor {
     public static final String DEFAULT = "\u001B[0m";
     public static final String INFO = "\u001B[32m";

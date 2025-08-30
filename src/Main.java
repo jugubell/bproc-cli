@@ -1,5 +1,8 @@
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -63,6 +66,9 @@ public class Main {
             case WRITE_CODE:
                 outActionCorrect = true;
                 break;
+            case ABORT:
+                Log.warning("[WARNING] Operation aborted by user.");
+                return;
             default:
                 Log.error("[ERROR] Invalid out argument.");
         }
@@ -71,9 +77,6 @@ public class Main {
             String sourceFilePath = cli.getSourceFile();
             String outputFilePath = cli.getOutputFile();
             CommandLineOption option = cli.getOption();
-
-            Globals globals = new Globals();
-            globals.setMemFilePath(sourceFilePath);
 
             ReadAssemblerFile asmFile = new ReadAssemblerFile(sourceFilePath);
             boolean readFileStaus = asmFile.readFile();
@@ -89,13 +92,15 @@ public class Main {
                         List<String> outFile = new ArrayList<>();
 
                         if(option == CommandLineOption.HEXV3) {
-                            outFile = compile.getHexFileLogisim();
+                            outFile = compile.getHexFileHexV3();
                         } else if(option == CommandLineOption.HEX) {
-                            outFile = compile.getMemFile(true);
+                            outFile = compile.getHexFileHex(true);
                         } else if(option == CommandLineOption.VHDL) {
                             outFile = compile.getHexFileVhdl();
+                        } else if(option == CommandLineOption.VERILOG) {
+                            outFile = compile.getHexFileVerilog();
                         } else {
-                            outFile = compile.getMemFile(false);
+                            outFile = compile.getHexFileHex(false);
                         }
 
                         if(inAction == CommandLineAction.GENERATE_CODE) {
@@ -107,12 +112,13 @@ public class Main {
 
                         if(outAction == CommandLineAction.WRITE_CODE) {
                             WriteHexFile writeHexFile = new WriteHexFile(outputFilePath, outFile, option);
-                            writeHexFile.writeMemFile();
-                            Log.info("[INFO BProC-CLI] File written successfully.");
+                            if(writeHexFile.writeFile())
+                                Log.info("[INFO BProC-CLI] File written successfully.");
                         }
                     }
                 }
             }
         }
+
     }
 }

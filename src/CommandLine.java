@@ -15,8 +15,8 @@ public class CommandLine {
     final List<String> HELP_ARGS = Arrays.asList("-h", "help", "--help");
     final List<String> VERSION_ARGS = Arrays.asList("-v", "version", "--version");
     final List<String> ACTION_IN_ARGS = Arrays.asList("-s", "-g");
-    final List<String> ACTION_OUT_ARGS = Arrays.asList("-o");
-    final List<String> OPTION_ARGS = Arrays.asList("--hex", "--bin", "--hexv3", "--vhdl");
+    final List<String> ACTION_OUT_ARGS = Arrays.asList("-o", "-ow");
+    final List<String> OPTION_ARGS = Arrays.asList("--hex", "--bin", "--hexv3", "--vhdl", "--vrlg");
 
     private HashMap<String, String> pairArgs = new HashMap<>();
     private String optArg;
@@ -80,11 +80,11 @@ public class CommandLine {
                 }
 
                 // verifying if there is an input action provided
-                if(!Collections.disjoint(this.pairArgs.keySet(), this.ACTION_IN_ARGS)) { // verifies if
+                if(!Collections.disjoint(this.pairArgs.keySet(), this.ACTION_IN_ARGS)) {
                     // handling -s action
                     if(this.pairArgs.containsKey("-s")) {
                         // verifying file path validity
-                        if(Utils.checkPath(this.pairArgs.get("-s")) == PathType.FILE) {
+                        if(Utils.checkPath(this.pairArgs.get("-s")) == PathType.FILE_EXISTS) {
                             this.inAction = CommandLineAction.VERIFY_SYNTAX;
                             this.sourceFile = this.pairArgs.get("-s");
                         } else {
@@ -95,7 +95,7 @@ public class CommandLine {
                     // handling -g action
                     if(this.pairArgs.containsKey("-g")) {
                         // verifying file path validity
-                        if(Utils.checkPath(this.pairArgs.get("-g")) == PathType.FILE) {
+                        if(Utils.checkPath(this.pairArgs.get("-g")) == PathType.FILE_EXISTS) {
                             this.inAction = CommandLineAction.GENERATE_CODE;
                             this.sourceFile = this.pairArgs.get("-g");
                         } else {
@@ -105,15 +105,37 @@ public class CommandLine {
 
                     // handling -o action
                     if(this.pairArgs.containsKey("-o")) {
+                        // checks if the file already exists : emits an overwrite warning
+                        if(Utils.checkPath(this.pairArgs.get("-o"), false) == PathType.FILE_EXISTS) {
+                            Scanner scanner = new Scanner(System.in);
+                            Log.warning("[WARNING] The file already exists, would you like to overwrite it? (Y/n): ");
+
+                            String answer = scanner.nextLine().trim();
+
+                            if (!answer.equals("Y")) {
+                                this.outAction = CommandLineAction.ABORT;
+                            }
+
+                            this.outAction = CommandLineAction.WRITE_CODE;
+                            this.outputFile = this.pairArgs.get("-o");
+
                         // verifying file/directory path validity
-                        if(Utils.checkPath(this.pairArgs.get("-o")) == PathType.FILE || Utils.checkPath(this.pairArgs.get("-o")) == PathType.DIRECTORY) {
+                        } else if(Utils.checkPath(this.pairArgs.get("-o"), false) == PathType.FILE_NEW || Utils.checkPath(this.pairArgs.get("-o"), false) == PathType.DIRECTORY) {
                             this.outAction = CommandLineAction.WRITE_CODE;
                             this.outputFile = this.pairArgs.get("-o");
                         } else {
                             this.outAction = CommandLineAction.INVALID_OUT_PATH;
                         }
-                    } else {
-                        this.outAction = CommandLineAction.NOTHING;
+                    }
+
+                    // handling -ow overwrite action
+                    if(this.pairArgs.containsKey("-ow")) {
+                        if(Utils.checkPath(this.pairArgs.get("-ow"), false) == PathType.FILE_NEW || Utils.checkPath(this.pairArgs.get("-ow"), false) == PathType.FILE_EXISTS || Utils.checkPath(this.pairArgs.get("-ow"), false) == PathType.DIRECTORY) {
+                            this.outAction = CommandLineAction.WRITE_CODE;
+                            this.outputFile = this.pairArgs.get("-ow");
+                        } else {
+                            this.outAction = CommandLineAction.INVALID_OUT_PATH;
+                        }
                     }
                 } else {
                     this.inAction = CommandLineAction.NO_IN_ARGS;
@@ -123,14 +145,22 @@ public class CommandLine {
                 if(argsLen % 2 == 1) {
                     String opt = this.args[argsLen-1];
                     if(this.OPTION_ARGS.contains(opt)) {
-                        if(opt.equals("--hex")) {
-                            this.option = CommandLineOption.HEX;
-                        } else if(opt.equals("--hexv3")) {
-                            this.option = CommandLineOption.HEXV3;
-                        } else if(opt.equals("--vhdl")) {
-                            this.option = CommandLineOption.VHDL;
-                        } else {
-                            this.option = CommandLineOption.BIN;
+                        switch (opt) {
+                            case "--hex":
+                                this.option = CommandLineOption.HEX;
+                                break;
+                            case "--hexv3":
+                                this.option = CommandLineOption.HEXV3;
+                                break;
+                            case "--vhdl":
+                                this.option = CommandLineOption.VHDL;
+                                break;
+                            case "--vrlg":
+                                this.option = CommandLineOption.VERILOG;
+                                break;
+                            default:
+                                this.option = CommandLineOption.BIN;
+                                break;
                         }
                     } else {
                         this.inAction = CommandLineAction.INVALID_OPTION;

@@ -1,10 +1,10 @@
 import java.util.ArrayList;
 import java.util.TreeMap;
 
+/**
+ * Globals stores the instruction set in a constant {@link #INSTSET}.
+ */
 public class Globals {
-    private String assemblyFilePath = "";
-    private String logisimHexFilePath = "";
-    private String memFilePath = "";
     private final TreeMap<String, Instruction> INSTSET = new TreeMap<>();
 
     public Globals() {
@@ -35,27 +35,8 @@ public class Globals {
         this.INSTSET.put("JMP", new Instruction("LDI", false, 0x0000, false));
     }
 
-    public void setAssemblyFilePath(String filePath) {
-        this.assemblyFilePath = filePath;
-    }
-    public void setLogisimHexFilePath(String filePath) { this.logisimHexFilePath = filePath; }
-    public void setMemFilePath(String filePath) { this.memFilePath = filePath; }
-
-    public String getAssemblyFilePath() {
-        return this.assemblyFilePath;
-    }
-
-    public String getLogisimHexFilePath() {
-        return this.logisimHexFilePath;
-    }
-
-    public String getMemFilePath() {
-        return this.memFilePath;
-    }
-
     public TreeMap<String, Instruction> getInstset() {
         return this.INSTSET;
     }
-
 
 }

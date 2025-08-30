@@ -1,3 +1,9 @@
+/**
+ * Class handling the program metadata.
+ * It handles : program memory usage, data memory usage,
+ * first address of memory, presence of data declaration
+ * This class acts as buffer for data reuse.
+ */
 public class ProgramMetadata {
     private int programMemoryUsage;
     private int dataMemoryUsage;
@@ -6,8 +12,6 @@ public class ProgramMetadata {
     private int startIndex;
     private DataRange programDataRange;
     private DataRange dataDataRange;
-
-//    private int
 
     //setters
     public void setProgramMemoryUsage(int programMemoryUsage) {
