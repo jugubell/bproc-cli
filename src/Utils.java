@@ -1,4 +1,3 @@
-import java.io.FilenameFilter;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
@@ -159,7 +158,7 @@ public class Utils {
     }
     public static PathType checkPath(String pth, boolean read) {
 
-        List<String> allowedExt = new ArrayList<>();
+        List<String> allowedExt;
 
         if(read)
             allowedExt = Collections.singletonList("bpasm");
@@ -193,7 +192,7 @@ public class Utils {
 
     /**
      * Converts a file hex content to a binary format.
-     * Every line of the file content should be an hexadecimal number.
+     * Every line of the file content should be a hexadecimal number.
      * @param file as <code>List</code> of <code>String</code>
      * @return a <code>List</code> of <code>String</code> in binary format
      */

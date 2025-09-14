@@ -10,7 +10,7 @@ public class CommandLine {
     private CommandLineAction inAction = CommandLineAction.NOTHING;
     private CommandLineAction outAction = CommandLineAction.NOTHING;
     private CommandLineOption option = CommandLineOption.BIN;
-    private String[] args;
+    private final String[] args;
 
     final List<String> HELP_ARGS = Arrays.asList("-h", "help", "--help");
     final List<String> VERSION_ARGS = Arrays.asList("-v", "version", "--version");
@@ -18,12 +18,12 @@ public class CommandLine {
     final List<String> ACTION_OUT_ARGS = Arrays.asList("-o", "-ow");
     final List<String> OPTION_ARGS = Arrays.asList("--hex", "--bin", "--hexv3", "--vhdl", "--vrlg");
 
-    private HashMap<String, String> pairArgs = new HashMap<>();
+    private final HashMap<String, String> pairArgs = new HashMap<>();
     private String optArg;
 
     /**
      * Constructor of the class
-     * @param args
+     * @param args arguments of the command
      */
     public CommandLine(String[] args) {
         this.args = args;

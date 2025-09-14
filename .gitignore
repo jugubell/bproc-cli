@@ -28,5 +28,6 @@ bin/
 ### IDEA ###
 .idea/
 src/META-INF/
+doc/
 ### Mac OS ###
 .DS_Store

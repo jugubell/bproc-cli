@@ -1,6 +1,5 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -9,13 +8,13 @@ import java.util.Scanner;
  * Class for the assembler file reading.
  */
 public class ReadAssemblerFile {
-    private String filePath = "";
-    private List<String> trimmedData = new ArrayList<>();
-    private List<String> fileData = new ArrayList<>();
+    private String filePath;
+    private final List<String> trimmedData = new ArrayList<>();
+    private final List<String> fileData = new ArrayList<>();
 
     /**
      * Constructor for the {@link ReadAssemblerFile} class.
-     * @param filePath
+     * @param filePath path of the file to read as <code>String</code>
      */
     public ReadAssemblerFile(String filePath) {
         this.filePath = filePath;
@@ -26,7 +25,6 @@ public class ReadAssemblerFile {
      * Writes the file content into {@link #fileData}
      * Uses {@link #trimFile()} to trim the file content.
      * @return boolean true if read success
-     * @throws FileNotFoundException
      */
     public boolean readFile() {
         try {
@@ -89,7 +87,7 @@ public class ReadAssemblerFile {
     /**
      * Trims the file content and store the trimmed content
      * and stores the trimmed data in {@link #trimmedData}.
-     * It removes comments (starting with ;)
+     * It removes comments (starting with ';')
      * It removes extra spaces.
      * Uppercases everything.
      */

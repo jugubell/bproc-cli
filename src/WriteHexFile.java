@@ -1,5 +1,3 @@
-import com.sun.org.apache.bcel.internal.generic.ARETURN;
-
 import java.io.BufferedWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -10,15 +8,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.io.IOException;
-import java.util.Scanner;
 
 /**
  * Class handling writing the hex, hex v3, bin and vhdl files
  */
 public class WriteHexFile {
 
-    private List<String> hexFile;
-    private String filePath;
+    private final List<String> hexFile;
+    private final String filePath;
     private CommandLineOption option = CommandLineOption.BIN;
 
     /**

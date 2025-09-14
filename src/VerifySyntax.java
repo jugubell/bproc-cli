@@ -1,4 +1,3 @@
-import javax.sound.sampled.Line;
 import java.util.*;
 
 /**
@@ -7,10 +6,10 @@ import java.util.*;
 public class VerifySyntax {
     Globals glb = new Globals();
     TreeMap<String, Instruction> instSet = glb.getInstset();
-    private TreeMap<Integer, LineType> codeLineType = new TreeMap<>();
-    private ProgramMetadata programMetadata = new ProgramMetadata();
-    private List<String> code;
-    private List<String> labels = new ArrayList<>();
+    private final TreeMap<Integer, LineType> codeLineType = new TreeMap<>();
+    private final ProgramMetadata programMetadata = new ProgramMetadata();
+    private final List<String> code;
+    private final List<String> labels = new ArrayList<>();
 
     /**
      * Constructor of {@link VerifySyntax}
@@ -79,7 +78,7 @@ public class VerifySyntax {
                 return false;
             }
 
-            // writing the correspondant data line type
+            // writing the corresponding data line type
             this.codeLineType.put(i, lineType);
         }
 
@@ -99,7 +98,7 @@ public class VerifySyntax {
             }
         }
 
-        // checks if start: label is present when data declaration is made
+        // checks if 'start:' label is present when data declaration is made
         if((startIndex == -1) && (lastDataIndex != -1)) {
             this.codeLineType.clear();
             Log.error("[ERROR] Data declared but 'start:' label is not found");
@@ -109,7 +108,7 @@ public class VerifySyntax {
         // checks if the start: label is written after data declaration
         if(lastDataIndex > startIndex) {
             this.codeLineType.clear();
-            Log.error("[ERROR] Data is declared after 'start:' label at line: " + (lastDataIndex + 1) + ". The 'start:' laebl is at line: " + (startIndex + 1));
+            Log.error("[ERROR] Data is declared after 'start:' label at line: " + (lastDataIndex + 1) + ". The 'start:' label is at line: " + (startIndex + 1));
             return false;
         }
 
@@ -383,7 +382,7 @@ public class VerifySyntax {
         for (int i = 0; i < this.code.size(); i++) {
             // processing only data declaration lines
             if(this.codeLineType.get(i) == LineType.DATA) {
-                // set the current data for comparaison
+                // set the current data for comparison
                 currentData = Integer.parseInt(Utils.getDataAddress(this.code.get(i)), 16);
 
                 // compare if the first data address is not yet set OR if current is less than the first

@@ -1,13 +1,10 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
+/**
+ * Main class
+ * The entrypoint of the program
+ */
 public class Main {
     public static void main(String[] args) {
 
@@ -44,8 +41,6 @@ public class Main {
                 Log.error("[ERROR] Invalid arguments. Show help with command: java -jar BProC.jar help");
                 break;
             case VERIFY_SYNTAX:
-                inActionCorrect = true;
-                break;
             case GENERATE_CODE:
                 inActionCorrect = true;
                 break;
@@ -61,8 +56,6 @@ public class Main {
                 Log.error("[ERROR] Argument non-valid. Show help with command: java -jar BProC.jar help");
                 break;
             case NOTHING:
-                outActionCorrect = true;
-                break;
             case WRITE_CODE:
                 outActionCorrect = true;
                 break;
@@ -89,7 +82,7 @@ public class Main {
                     if(verifySyntax.isSyntaxCorrect()) {
 
                         Compile compile = new Compile(verifySyntax.getCode(), verifySyntax.getCodeLineType(), verifySyntax.getProgramMetadata());
-                        List<String> outFile = new ArrayList<>();
+                        List<String> outFile;
 
                         if(option == CommandLineOption.HEXV3) {
                             outFile = compile.getHexFileHexV3();
@@ -103,17 +96,21 @@ public class Main {
                             outFile = compile.getHexFileHex(false);
                         }
 
-                        if(inAction == CommandLineAction.GENERATE_CODE) {
-                            for (String s: outFile) {
-                                System.out.println(s);
+                        if(outFile != null) {
+                            if(inAction == CommandLineAction.GENERATE_CODE) {
+                                for (String s: outFile) {
+                                    System.out.println(s);
+                                }
+                                Log.info("[INFO BProC-CLI] Done generating code.");
                             }
-                            Log.info("[INFO BProC-CLI] Done generating code.");
-                        }
 
-                        if(outAction == CommandLineAction.WRITE_CODE) {
-                            WriteHexFile writeHexFile = new WriteHexFile(outputFilePath, outFile, option);
-                            if(writeHexFile.writeFile())
-                                Log.info("[INFO BProC-CLI] File written successfully.");
+                            if(outAction == CommandLineAction.WRITE_CODE) {
+                                WriteHexFile writeHexFile = new WriteHexFile(outputFilePath, outFile, option);
+                                if(writeHexFile.writeFile())
+                                    Log.info("[INFO BProC-CLI] File written successfully.");
+                            }
+                        } else {
+                            Log.error("[ERROR] Output file not generated.");
                         }
                     }
                 }

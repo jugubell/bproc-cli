@@ -2,16 +2,16 @@
  * Class for handling instruction form
  */
 public class Instruction {
-    private String name;
-    private boolean hasOperand;
-    private Integer opCode;
-    private boolean isHWinst;
+    private final String name;
+    private final boolean hasOperand;
+    private final Integer opCode;
+    private final boolean isHWinst;
 
     /**
      * Constructor of the {@link Instruction} with hardware instruction defaulted to true.
-     * @param name
-     * @param hasOperand
-     * @param opCode
+     * @param name identifier of the instruction
+     * @param hasOperand boolean true if it needs an operand
+     * @param opCode the binary code of the operation supplied as an <code>Integer</code>
      */
     public Instruction(String name, boolean hasOperand, Integer opCode) {
         this.name = name;
@@ -22,10 +22,10 @@ public class Instruction {
 
     /**
      * Constructor of the {@link Instruction} with control of instruction type (SW/HW).
-     * @param name
-     * @param hasOperand
-     * @param opCode
-     * @param isHWinst
+     * @param name identifier of the instruction
+     * @param hasOperand boolean true if it needs an operand
+     * @param opCode the binary code of the operation supplied as an <code>Integer</code>
+     * @param isHWinst boolean true is it a harware instruction, false if it is a software instruction
      */
     public Instruction(String name, boolean hasOperand, Integer opCode, boolean isHWinst) {
         this.name = name;
