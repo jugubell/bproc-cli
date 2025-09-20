@@ -10,10 +10,10 @@
 ;.data 0a2h ffffh
 
 start:
-LDA 010h ; Load address 010h to AC
-ADD 011h ; Add AC and address 011h
+LDA 010h   ; Load address 010h to AC
+ADD 011h   ; Add AC and address 011h
 STA [012h] ; Store ALU result (AC) to address 012h
 
 haltProc:
-HLT      ; Halt the processor
+HLT        ; Halt the processor
 ; end of program

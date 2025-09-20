@@ -1,8 +1,36 @@
+/*
+ * File: CommandLine.java
+ * Project: bproc-cli
+ * Last modified: 2025-09-18 17:02
+ *
+ * This file: CommandLine.java is part of BProC-CLI project.
+ *
+ * BProC-CLI is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published
+ * by the Free Software Foundation, either version 2 of the License,
+ * or (at your option) any later version.
+ *
+ * BProC-CLI is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with BProC-CLI. If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Copyright (C) 2025 Jugurtha Bellagh
+ */
+
+package com.jugubell.bproccli.cli;
+
 import java.util.*;
+import com.jugubell.bproccli.utils.Utils;
+import com.jugubell.bproccli.console.Log;
 
 /**
  * Small utility for handling command line interface
  * It pasrses the arguments at the instanciation
+ * @author Jugurtha Bellagh
  */
 public class CommandLine {
     private String sourceFile;
@@ -14,6 +42,7 @@ public class CommandLine {
 
     final List<String> HELP_ARGS = Arrays.asList("-h", "help", "--help");
     final List<String> VERSION_ARGS = Arrays.asList("-v", "version", "--version");
+    final List<String> INSTR_ARGS = Arrays.asList("--instruction-set", "--is");
     final List<String> ACTION_IN_ARGS = Arrays.asList("-s", "-g");
     final List<String> ACTION_OUT_ARGS = Arrays.asList("-o", "-ow");
     final List<String> OPTION_ARGS = Arrays.asList("--hex", "--bin", "--hexv3", "--vhdl", "--vrlg");
@@ -65,6 +94,9 @@ public class CommandLine {
                 }
                 if(this.VERSION_ARGS.contains(args[0])) { // version arg
                     this.inAction = CommandLineAction.SHOW_VERSION;
+                }
+                if(this.INSTR_ARGS.contains(args[0])) {
+                    this.inAction = CommandLineAction.SHOW_INSTRSET; // instruction set arg
                 }
 
             // handling 2 to 5 arguments
