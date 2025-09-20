@@ -1,3 +1,32 @@
+/*
+ * File: Utils.java
+ * Project: bproc-cli
+ * Last modified: 2025-09-14 17:57
+ *
+ * This file: Utils.java is part of BProC-CLI project.
+ *
+ * BProC-CLI is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published
+ * by the Free Software Foundation, either version 2 of the License,
+ * or (at your option) any later version.
+ *
+ * BProC-CLI is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with BProC-CLI. If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Copyright (C) 2025 Jugurtha Bellagh
+ */
+
+package com.jugubell.bproccli.utils;
+
+import com.jugubell.bproccli.cli.PathType;
+import com.jugubell.bproccli.console.ConsoleColor;
+import com.jugubell.bproccli.console.Log;
+
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
@@ -9,6 +38,7 @@ import java.util.List;
 
 /**
  * Static class utility class for various tasks
+ * @author Jugurtha Bellagh
  */
 public class Utils {
     /**
@@ -207,7 +237,8 @@ public class Utils {
     }
 
     /**
-     * Checks if the system is Windows for use in {@link ConsoleColor}
+     * Checks if the system is not Windows for use in {@link Log}
+     * with {@link ConsoleColor}
      * @return boolean false if the system is Windows
      */
     public static boolean supportsColor() {
