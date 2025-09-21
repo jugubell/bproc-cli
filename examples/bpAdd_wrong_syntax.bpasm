@@ -1,0 +1,19 @@
+; Basic processor
+; This program adds value of addresses
+; 010h and 011h and stores the result
+; in address 012h
+; ./examples/bpAdd.bpasm
+
+; verify syntax with -s argument, correct and uncomment error by error indicated in comments by <<<>>>
+
+.data 10h FFFFh ; <<<address should be explicitly 16bits>>>
+;.data 011h 014h ; <<<data should be explicitly 12bits>>>
+
+;start: <<<uncomment, start: should be present when .data is declared>>>
+;LDAWRONG 010h   ; <<<correct instruction  LDA. Load address 010h to AC>>>
+ADD 011h   ; Add AC and address 011h
+STA [012h] ; Store ALU result (AC) to address 012h
+
+;2haltProc: ; <<<label syntax not allowed>>>
+HLT        ; Halt the processor
+; end of program

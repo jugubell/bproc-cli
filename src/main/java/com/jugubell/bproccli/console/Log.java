@@ -66,20 +66,12 @@ public class Log {
         System.out.println("*****************************************************");
         System.out.println("**************** Help for BProC CLI *****************");
         System.out.println("*****************************************************");
-        System.out.println("*                                                   *");
-        System.out.println("*  ;;;;      /                                      *");
-        System.out.println("*  ;;;;     /_____  ______  _____  ______  ______   *");
-        System.out.println("*          /     / /     / /      /     / /         *");
-        System.out.println("*  ;;;;   /_____/ /_____/ /      /_____/ /______    *");
-        System.out.println("*   ;;;          /                                  *");
-        System.out.println("*  ;;           /                                   *");
-        System.out.println("*****************************************************");
         System.out.println();
         System.out.println("Description:");
         System.out.println("    BProC is a simple command line interface for compiling assembler files '.bpasm'");
         System.out.println("    for basic processors intended for education use.");
-        System.out.println("    Please find the supported instruction set in: https://github.com/jugubell/bproc-cli");
-        System.out.println("    This project is free and open source, it is licensed under the GPLv2 license.");
+        System.out.println("    Please find related info about the project on: https://github.com/jugubell/bproc-cli");
+        System.out.println("    This project is free and open source, and it is licensed under the GPLv2 license.");
         System.out.println();
         System.out.println("Usage:");
         System.out.println("    bproc [-action <inputFile (*.bpasm)>] [optional -output <outputFileName/outputDirectory>] [optional --option <compileType>]");
@@ -115,7 +107,7 @@ public class Log {
     }
 
     public static void instructionSet() {
-        Globals glb = new Globals();
+//        Globals glb = new Globals();  // for future dynamic instruction set fetch
         System.out.println("BProC compiler supported instruction set:");
         System.out.println("-------------------------------------------------------------------------------------------------------------------");
         System.out.println("| Instr. | Op code | Type     | Needs an oprd. | Description                                                      |");
@@ -129,8 +121,8 @@ public class Log {
         System.out.println("| ISZ    | 0x6000  | Hardware | Yes            | Increment value of addr. and skip next instr. if result=0        |");
         System.out.println("| CLA    | 0x7800  | Hardware | No             | Clear accumulator A                                              |");
         System.out.println("| CLE    | 0x7400  | Hardware | No             | Clear flag E (carry out)                                         |");
-        System.out.println("| CMA    | 0x7200  | Hardware | No             | Logic `NOT` of accumulator A (A = Ā)                             |");
-        System.out.println("| CME    | 0x7100  | Hardware | No             | Logic `NOT` of flag E (E = Ē)                                    |");
+        System.out.println("| LNA    | 0x7200  | Hardware | No             | Logic `NOT` of accumulator A (A = Ā)                             |");
+        System.out.println("| LNE    | 0x7100  | Hardware | No             | Logic `NOT` of flag E (E = Ē)                                    |");
         System.out.println("| SRA    | 0x7080  | Hardware | No             | Shift right of the accumulator A through the flag E              |");
         System.out.println("| SLA    | 0x7040  | Hardware | No             | Shift left of the accumulator A through the flag E               |");
         System.out.println("| INC    | 0x7020  | Hardware | No             | Increment accumulator A                                          |");
@@ -143,9 +135,10 @@ public class Log {
         System.out.println("| WOR    | 0xF400  | Hardware | No             | Write output register (GPIO out)                                 |");
         System.out.println("| SFI    | 0xF200  | Hardware | No             | Skip the next instr. if flag FGI = 1 (Input reading flag)        |");
         System.out.println("| SFO    | 0xF100  | Hardware | No             | Skip the next instr. if flag FGO = 0 (Output writing flag)       |");
-        System.out.println("| LDI    | 0xF080  | Hardware | Yes            | Load data in immediate mode                                      |");
+        System.out.println("| LDD*   | 0xF080  | Hardware | Yes            | Load data in immediate addressing mode                           |");
         System.out.println("| JMP    | 0x0000  | Software | No             | Jump to label in assembly code                                   |");
         System.out.println("-------------------------------------------------------------------------------------------------------------------");
+        System.out.println("* Not yet supported (instead, use .data declaration combined with LDA)");
         System.out.println();
         System.out.println("Keywords:");
         System.out.println("------------------------------------------------------------------------------------------------------------------");

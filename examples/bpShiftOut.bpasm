@@ -13,7 +13,7 @@
 
 start:
 LDA 020h ; load address 010h to AC
-OUT      ; put AC value in GPIO_OUT
+WOR      ; put AC value in GPIO_OUT
 
 CLE
 LDA 021h
@@ -24,8 +24,8 @@ SZA
 JMP delay1
 
 LDA 020h
-CIL      ; shift left AC value
-OUT      ; put AC value in GPIO_OUT
+SLA      ; shift left AC value
+WOR      ; put AC value in GPIO_OUT
 
 CLE
 LDA 021h

@@ -1,7 +1,11 @@
 ### IntelliJ IDEA ###
 out/
+release/
 !**/src/main/**/out/
 !**/src/test/**/out/
+.idea/
+src/main/resources/META-INF/
+bproc-cli.iml
 
 ### Eclipse ###
 .apt_generated
@@ -25,9 +29,5 @@ bin/
 ### VS Code ###
 .vscode/
 
-### IDEA ###
-.idea/
-src/main/resources/META-INF/
-doc/
 ### Mac OS ###
 .DS_Store

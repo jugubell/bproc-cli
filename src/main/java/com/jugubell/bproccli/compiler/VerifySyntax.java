@@ -27,6 +27,8 @@ import com.jugubell.bproccli.console.Log;
 import com.jugubell.bproccli.utils.*;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The class handling the syntax verification of the code.
@@ -215,12 +217,20 @@ public class VerifySyntax {
      */
     public LineType isLabel(String[] label) {
         String labelStr = String.join(" ", label);
-        int indexOfColumn = label[0].indexOf(":");
-        if(!labelStr.isEmpty() && indexOfColumn != -1) {
-            if(!String.join(" ", label).isEmpty() && !this.instSet.containsKey(label[0].replace(":", "")) && labelStr.substring(indexOfColumn+1).trim().isEmpty()) {
+//        int indexOfColumn = label[0].indexOf(":");
+
+        if(!labelStr.isEmpty()) {
+//            if(!String.join(" ", label).isEmpty() && !this.instSet.containsKey(label[0].replace(":", "")) && labelStr.substring(indexOfColumn+1).trim().isEmpty()) {
+//                return LineType.LABEL;
+//            } else {
+//                return LineType.SYNTAX_ERROR;
+//            }
+            Pattern labelPattern = Pattern.compile("^[A-Za-z_][A-Za-z0-9_]*:$");
+            Matcher labelMatcher = labelPattern.matcher(labelStr);
+            if(labelMatcher.find()) {
                 return LineType.LABEL;
             } else {
-                return LineType.SYNTAX_ERROR;
+                return LineType.START;
             }
         } else {
             return LineType.SYNTAX_ERROR;

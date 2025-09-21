@@ -1,35 +1,54 @@
-# BProC CLI - Basic Processors Compiler Command Line Interface #
-## Description ##
-BProC is a compiler for basic processor designs, it uses assembly code written in `.baspm` 
+![](./src/main/resources/img/bproc_logo_h128.png)
+# BProC CLI - Basic Processors Compiler Command Line Interface
+
+## Table of contents
+* [Table of contents](#table-of-contents)
+* [Description](#description)
+* [Installation](#installation)
+  * [Package install](#package-install)
+  * [JAR run](#jar-run)
+    * [Prerequisites](#prerequisites)
+    * [Run the .jar file](#run-the-jar-file)
+* [Usage](#usage)
+  * [Arguments](#arguments)
+  * [Actions](#actions)
+  * [Options](#options)
+  * [Other arguments](#other-arguments)
+* [Supported instruction set](#supported-instruction-set)
+* [Keywords](#keywords)
+* [TODO](#todo)
+* [Credit](#credit)
+
+## Description
+BProC is a compiler for basic processor designs, it uses assembly code written in `.bpasm` 
 files. BProC-CLI is a simple command line interface for compiling assembler files `.bpasm` 
 for basic processors intended for education use. The vision of the project is to provide 
 simple way to generate RAM programs while designing basic processors.
 The project, as it is, provide a rigid instruction set, but the goal is to provide a 
 configurable instruction set.
 
-## Installation ##
+## Installation
 Choose one of the options available:
-- Pakage install
-- JAR run
-### Package install ###
-1. Download one of the packages suitable for your device in the release 
-section : <a href="https://github.com/jugubell/bproc-cli/releases">Release section</a>
+- [Package install](#package-install)
+- [JAR run](#jar-run)
+### Package install
+1. Download one of the packages suitable for your device in the Release Section
 2. Install the package with dnf/apt or execute installer on Windows.
    - Supported packages: rpm, deb, exe.
-   - Supported architectures: x86_64, aarch64
+   - Supported architectures: x86_64, aarch64/amd64
 
-### JAR run ###
-#### Prerequisites ####
+### JAR run
+#### Prerequisites
 Java 8 or later runtime is needed to run the compiler. To verify, 
 in the terminal run `java -version` or `java --version`. 
-Otherwise, install the JRE for your device from <a href="https://adoptium.net/en-GB/temurin/releases?version=21">here</a>.
+Otherwise, install the JRE for your device from *Eclipse Adoptium* [here](https://adoptium.net/en-GB/temurin/releases?version=21).
 
-#### Run the .jar file ####
+#### Run the .jar file
 The `.jar` file provided can be used to compile `.bpasm` assembly files in a terminal:
-1. Download the `.jar` file from the <a href="https://github.com/jugubell/bproc-cli/releases">Release section</a> 
+1. Download the `.jar` file from the Release section.
 2. Run with: `java -jar bproc-cli.jar <argument(s)>`
 
-## Usage ##
+## Usage
 Here is how to use the BProC-CLI:
 ```
 bproc [-action <inputFile (*.bpasm)>] [optional -output <outputFileName/outputDirectory>] [optional --option <compileType>]
@@ -38,30 +57,30 @@ If you're using the JAR file:
 ```
 java -jar bproc-cli.jar [-action <inputFile (*.bpasm)>] [optional -output <outputFileName/outputDirectory>] [optional --option <compileType>]
 ```
-#### Arguments ####
-- inputFile (*.bpasm): A valid assembler file absolute or relative path with `.bpasm` extension.
-- outputFileName/outputDirectory: A valid output directory, if the name file 
+#### Arguments
+- **inputFile (*.bpasm)**: A valid assembler file absolute or relative path with `.bpasm` extension.
+- **outputFileName/outputDirectory**: A valid output directory, if the name file 
 is not provided, it will be generated.
-- compileType [binary|hexv3]: Type of compilation : default 'binary'
+- **compileType**: Type of compilation : default 'binary'
 
-#### Actions ####
+#### Actions
 - `-s` : verify syntax.
 - `-g` : verify syntax, compile then generate the compiled code.
 - `-o` : verify syntax, compile and save the compiled code to a file
 
-#### Options ####
-- `--bin` : compiles to binary [value by default]
+#### Options
+- `--bin` : compiles to binary (value by default)
 - `--hex` : compiles to hexadecimal
 - `--hexv3` : compiles to hexadecimal version 3 format (compatible for Logisim RAM)
 - `--vhdl` : compiles to a portion of VHDL RAM initialization signal
 - `--vrlg` : compiles to a portion of Verilog RAM initial bloc
 
-#### Other arguments ####
+#### Other arguments
 - `--help`, `-h`, `help`       : shows the help.
 - `--version`, `-v`, `version` : shows the version.
 - `--instruction-set`, `--is`  : shows the supported instruction set.
 
-## Supported Instruction Set ##
+## Supported Instruction Set
 This table recapitulate the current supported instruction set.
 
 | Instruction | Op code | Type     | Needs an operand | Description                                                                  |
@@ -89,19 +108,21 @@ This table recapitulate the current supported instruction set.
 | ***WOR***   | 0xF400  | Hardware | No               | Write output register (GPIO out)                                             |
 | ***SFI***   | 0xF200  | Hardware | No               | Skip the next instr. if flag FGI = 1 (Input reading flag)                    |
 | ***SFO***   | 0xF100  | Hardware | No               | Skip the next instr. if flag FGO = 0 (Output writing flag)                   |
-| ***LDD***   | 0xF080  | Software | No               | Load data in immediate mode                                                  |
+| ***LDD***\* | 0x0000  | Software | Yes              | Load data in immediate mode                                                  |
 | ***JMP***   | 0x0000  | Software | No               | Jump to label in assembly code                                               |
+\* Not yet supported (instead, use .data declaration combined with LDA)
 
-## Keywords ##
+## Keywords
 There are 2 keywords :
   - `.data`     : for data declaration in RAM
   - `start:`    : label to indicate the program start. This label is put after data declaration
   - `0x` prefix or `h` suffix : for addresses and values in hexadecimal
 
-## TODO ##
-1. Integrate an SQLite database to manage a custom instruction set and configurations.
-2. Extend RAM use to custom RAM capacity.
-3. Enable software instruction from one or more hardware instruction.
+## TODO
+1. Add LDD instruction support for immediate addressing
+2. Integrate an SQLite database to manage a custom instruction set and configurations.
+3. Extend RAM use to custom RAM capacity.
+4. Enable software instruction from one or more hardware instruction.
 
-## Credit ##
+## Credit
 Default instruction set mostly inspired from PhD lab work at University of Blida.

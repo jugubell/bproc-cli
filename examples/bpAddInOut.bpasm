@@ -12,13 +12,13 @@
 ;.data 011h 5D3Ch  ; delay: 1000 ms
 
 start:
-INP
+RIR
 STA 012h
 CLA
 CLE
 LDA 010h
 ADD 012h
-OUT
+WOR
 CLE
 LDA 011h
 

@@ -24,13 +24,13 @@ LDA 033h ; init toggle state
 STA 034h
 
 LDA 035h ; load OUT ref
-OUT
+WOR
 JMP delay
 
 toggle:
 LDA 035h ; load OUT ref
-CIL
-OUT
+SLA
+WOR
 
 delay:
 LDA 031h ; init counter

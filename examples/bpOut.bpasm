@@ -11,5 +11,5 @@
 
 start:
 LDA 020h
-OUT
+WOR
 HLT

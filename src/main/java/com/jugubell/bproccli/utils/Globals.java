@@ -56,7 +56,7 @@ public class Globals {
         this.INSTSET.put("WOR", new Instruction("WOR", false, 0xF400));
         this.INSTSET.put("SFI", new Instruction("SFI", false, 0xF200));
         this.INSTSET.put("SFO", new Instruction("SFO", false, 0xF100));
-        this.INSTSET.put("LDD", new Instruction("LDD", true, 0x0000, false)); // former opcode 0xF080 ( and was HW instr.)
+//        this.INSTSET.put("LDD", new Instruction("LDD", true, 0x0000, false)); // upcoming immediate addressing instruction // former opcode 0xF080 ( and was HW instr.)
         this.INSTSET.put("JMP", new Instruction("JMP", false, 0x0000, false));
     }
 
