@@ -36,6 +36,10 @@ Choose one of the options available:
 2. Install the package with dnf/apt or execute installer on Windows.
    - Supported packages: rpm, deb, exe.
    - Supported architectures: x86_64, aarch64/amd64
+- On Windows, add bproc to the Path **OR** run this command in PowerShell:
+  ```
+  [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Program Files\bproc", "User")
+  ```
 
 ### JAR run
 #### Prerequisites
@@ -110,6 +114,8 @@ This table recapitulate the current supported instruction set.
 | ***SFO***   | 0xF100  | Hardware | No               | Skip the next instr. if flag FGO = 0 (Output writing flag)                   |
 | ***LDD***\* | 0x0000  | Software | Yes              | Load data in immediate mode                                                  |
 | ***JMP***   | 0x0000  | Software | No               | Jump to label in assembly code                                               |
+
+
 \* Not yet supported (instead, use .data declaration combined with LDA)
 
 ## Keywords
